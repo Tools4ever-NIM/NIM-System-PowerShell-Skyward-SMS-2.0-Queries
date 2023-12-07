@@ -1,8 +1,7 @@
 # NIM-System-PowerShell-Skyward-SMS2.0-Queries
 
-<p align="center">
-  <img src="Assets/Logo.jpg">
-</p>
+![image](https://github.com/Tools4ever-NIM/NIM-System-PowerShell-Skyward-SMS2.0-Queries/assets/24281600/f1f8b6d2-6cf0-4bde-b0e1-837778a72d5b)
+
 NIM Connector for Skyward SMS 2.0
 
 <!-- TABLE OF CONTENTS -->
