@@ -114,6 +114,19 @@ function Idm-SystemInfo {
                 label = 'Enable KA'
                 value = $true
             }
+			@{
+                name = 'nr_of_sessions'
+                type = 'textbox'
+                label = 'Max. number of simultaneous sessions'
+                value = 1
+            }
+            @{
+                name = 'sessions_idle_timeout'
+                type = 'textbox'
+                label = 'Session cleanup idle time (minutes)'
+                tooltip = '0 disables session cleanup'
+                value = 5
+            }
             @{
                 name = 'table_1_name'
                 type = 'textbox'
