@@ -1,3 +1,4 @@
+# version: 1.1
 $Log_MaskableKeys = @(
     'password'
 )
@@ -113,6 +114,20 @@ function Idm-SystemInfo {
                 type = 'checkbox'
                 label = 'Enable KA'
                 value = $true
+            }
+			@{
+                name = 'nr_of_sessions'
+                type = 'textbox'
+                label = 'Max. number of simultaneous sessions'
+                tooltip = ''
+                value = 1
+            }
+            @{
+                name = 'sessions_idle_timeout'
+                type = 'textbox'
+                label = 'Session cleanup idle time (minutes)'
+                tooltip = ''
+                value = 1
             }
             @{
                 name = 'table_1_name'
@@ -619,7 +634,7 @@ function Open-ProgressDBConnection {
 
     $connection_params = ConvertFrom-Json2 $ConnectionParams
 
-    $connection_string =  "DRIVER={Progress OpenEdge $($connection_params.driver_version) driver};HOST=$($connection_params.host_name);PORT=$($connection_params.port);DB=$($connection_params.database);UID=$($connection_params.user);PWD=$($connection_params.password);DIL=$($connection_params.isolation_mode);AS=$($connection_params.array_size)"
+    $connection_string =  "DRIVER={Progress OpenEdge $($connection_params.driver_version) driver};HOST=$($connection_params.host_name);PORT=$($connection_params.port);DB=$($connection_params.database);UID=$($connection_params.user);PWD=$($connection_params.password);DIL=$($connection_params.isolation_mode);AS=$($connection_params.array_size);Packet Size=512"
     
     if($connection_params.enableETWT) { $connectionString += "ETWT=1;" }
     if($connection_params.enableUWCT) { $connectionString += "UWCT=1;" }
