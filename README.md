@@ -9,7 +9,7 @@
 
 
 ## Actions
-- Only restricted to privileges of the database account. Insert/Update/Delete are available for each table
+- Read Only
 
 
 # NIM Docs
