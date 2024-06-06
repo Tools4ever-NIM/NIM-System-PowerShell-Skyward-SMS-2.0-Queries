@@ -1,4 +1,3 @@
-# version: 1.1
 $Log_MaskableKeys = @(
     'password'
 )
@@ -478,11 +477,12 @@ function Idm-Dispatcher {
                     break
                 }
             }
+			
+			$class_query = $class_query.replace("''","'")
+			$column_query = "SELECT TOP 1 * FROM ( $class_query ) columns"
 
-            $column_query = $class_query.replace("SELECT ","SELECT TOP 5 ")
-        
             $columns = Fill-SqlInfoCache -Query $column_query
-        
+
             $Global:ColumnsInfoCache[$Class] = @{
                 primary_keys = @($columns | Where-Object { $_.is_primary_key } | ForEach-Object { $_.name })
                 identity_col = @($columns | Where-Object { $_.is_identity    } | ForEach-Object { $_.name })[0]
