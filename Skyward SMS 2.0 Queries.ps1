@@ -478,8 +478,7 @@ function Idm-Dispatcher {
                 }
             }
 			
-			$class_query = $class_query.replace("''","'")
-			$column_query = "SELECT TOP 1 * FROM ( $class_query ) columns"
+            $column_query = "SELECT TOP 1 * FROM ( $class_query ) columns"
 
             $columns = Fill-SqlInfoCache -Query $column_query
 
