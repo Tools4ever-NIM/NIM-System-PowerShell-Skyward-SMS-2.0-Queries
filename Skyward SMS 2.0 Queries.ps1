@@ -1,12 +1,11 @@
 $Log_MaskableKeys = @(
-    'password'
+    'password',
+    'connection_string'
 )
-
 
 #
 # System functions
 #
-
 function Idm-SystemInfo {
     param (
         # Operations
@@ -22,6 +21,12 @@ function Idm-SystemInfo {
     if ($Connection) {
         @(
             @{
+                name = 'connection_header'
+                type = 'text'
+                text = 'Connection'
+				tooltip = 'Connection information for the database'
+            }
+			@{
                 name = 'host_name'
                 type = 'textbox'
                 label = 'Server'
@@ -49,41 +54,7 @@ function Idm-SystemInfo {
                 description = 'Version of Progress OpenEdge Driver'
                 value = '11.7'
             }
-            @{
-                name = 'enableVPN'
-                type = 'checkbox'
-                label = 'Use VPN'
-                value = $true
-            }
-            @{
-                name = 'vpnOpenPath'
-                type = 'textbox'
-                label = 'Open VPN Path'
-                description = 'Path to script start connection to vpn'
-                value = 'C:\\Tools4ever\\Scripts\\connectSkywardVPN.bat'
-            }
-            @{
-                name = 'vpnClosePath'
-                type = 'textbox'
-                label = 'Close VPN Path'
-                description = 'Path to script close connection to vpn'
-                value = 'C:\\Tools4ever\\Scripts\\disconnectSkywardVPN.bat'
-            }
-            @{
-                name = 'user'
-                type = 'textbox'
-                label = 'Username'
-                label_indent = $true
-                description = 'User account name to access server'
-            }
-            @{
-                name = 'password'
-                type = 'textbox'
-                password = $true
-                label = 'Password'
-                label_indent = $true
-                description = 'User account password to access server'
-            }
+            
             @{
                 name = 'isolation_mode'
                 type = 'textbox'
@@ -115,6 +86,69 @@ function Idm-SystemInfo {
                 value = $true
             }
 			@{
+                name = 'user'
+                type = 'textbox'
+                label = 'Username'
+                description = 'User account name to access server'
+            }
+            @{
+                name = 'password'
+                type = 'textbox'
+                password = $true
+                label = 'Password'
+                description = 'User account password to access server'
+            }
+			@{
+                name = 'query_timeout'
+                type = 'textbox'
+                label = 'Query Timeout'
+                description = 'Time it takes for the query to timeout'
+                value = '1800'
+            }
+			@{
+                name = 'connection_timeout'
+                type = 'textbox'
+                label = 'Connection Timeout'
+                description = 'Time it takes for the ODBC Connection to timeout'
+                value = '3600'
+            }
+			@{
+                name = 'vpn_header'
+                type = 'text'
+                text = 'VPN'
+				tooltip = 'VPN to access network for database (e.g. ISCorp). Not recommended. Use Site-to-Site VPN instead'
+            }
+			@{
+                name = 'enableVPN'
+                type = 'checkbox'
+                label = 'Use VPN'
+                value = $false
+            }
+            @{
+                name = 'vpnOpenPath'
+                type = 'textbox'
+                label = 'Open VPN Path'
+                description = 'Path to script start connection to vpn'
+                value = 'C:\\Tools4ever\\Scripts\\connectSkywardVPN.bat'
+				disabled = '!enableVPN'
+                hidden = '!enableVPN'
+            }
+            @{
+                name = 'vpnClosePath'
+                type = 'textbox'
+                label = 'Close VPN Path'
+                description = 'Path to script close connection to vpn'
+                value = 'C:\\Tools4ever\\Scripts\\disconnectSkywardVPN.bat'
+				disabled = '!enableVPN'
+                hidden = '!enableVPN'
+            }
+			@{
+                name = 'session_header'
+                type = 'text'
+                text = 'Session Options'
+				tooltip = 'Options for system session'
+            }
+			@{
                 name = 'nr_of_sessions'
                 type = 'textbox'
                 label = 'Max. number of simultaneous sessions'
@@ -128,255 +162,520 @@ function Idm-SystemInfo {
                 tooltip = ''
                 value = 1
             }
+			@{
+                name = 'table_header'
+                type = 'text'
+                text = 'Tables'
+				tooltip = 'Query to Table mapping'
+            }
+			@{
+                name = 'table_1_header'
+                type = 'text'
+                text = 'Table 1'
+				tooltip = 'Table 1 Config'
+            }
             @{
                 name = 'table_1_name'
                 type = 'textbox'
-                label = 'Query 1 - Name of Table'
+                label = 'Table 1 Name'
                 description = ''
             }
             @{
                 name = 'table_1_query'
                 type = 'textbox'
-                label = 'Query 1 - SQL Statement'
+                label = 'Table 1 Query'
                 description = ''
+				disabled = '!table_1_name'
+                hidden = '!table_1_name'
             }
-            @{
-                name = 'table_2_name'
-                type = 'textbox'
-                label = 'Query 2 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_2_query'
-                type = 'textbox'
-                label = 'Query 2 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_3_name'
-                type = 'textbox'
-                label = 'Query 3 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_3_query'
-                type = 'textbox'
-                label = 'Query 3 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_4_name'
-                type = 'textbox'
-                label = 'Query 4 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_4_query'
-                type = 'textbox'
-                label = 'Query 4 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_5_name'
-                type = 'textbox'
-                label = 'Query 5 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_5_query'
-                type = 'textbox'
-                label = 'Query 5 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_6_name'
-                type = 'textbox'
-                label = 'Query 6 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_6_query'
-                type = 'textbox'
-                label = 'Query 6 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_7_name'
-                type = 'textbox'
-                label = 'Query 7 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_7_query'
-                type = 'textbox'
-                label = 'Query 7 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_8_name'
-                type = 'textbox'
-                label = 'Query 8 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_8_query'
-                type = 'textbox'
-                label = 'Query 8 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_9_name'
-                type = 'textbox'
-                label = 'Query 9 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_9_query'
-                type = 'textbox'
-                label = 'Query 9 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_10_name'
-                type = 'textbox'
-                label = 'Query 10 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_10_query'
-                type = 'textbox'
-                label = 'Query 10 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_11_name'
-                type = 'textbox'
-                label = 'Query 11 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_11_query'
-                type = 'textbox'
-                label = 'Query 11 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_12_name'
-                type = 'textbox'
-                label = 'Query 12 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_12_query'
-                type = 'textbox'
-                label = 'Query 12 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_13_name'
-                type = 'textbox'
-                label = 'Query 13 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_13_query'
-                type = 'textbox'
-                label = 'Query 13 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_14_name'
-                type = 'textbox'
-                label = 'Query 14 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_14_query'
-                type = 'textbox'
-                label = 'Query 14 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_15_name'
-                type = 'textbox'
-                label = 'Query 15 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_15_query'
-                type = 'textbox'
-                label = 'Query 15 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_16_name'
-                type = 'textbox'
-                label = 'Query 16 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_16_query'
-                type = 'textbox'
-                label = 'Query 16 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_17_name'
-                type = 'textbox'
-                label = 'Query 17 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_17_query'
-                type = 'textbox'
-                label = 'Query 17 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_18_name'
-                type = 'textbox'
-                label = 'Query 18 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_18_query'
-                type = 'textbox'
-                label = 'Query 18 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_19_name'
-                type = 'textbox'
-                label = 'Query 19 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_19_query'
-                type = 'textbox'
-                label = 'Query 19 - SQL Statement'
-                description = ''
-            }
-            @{
-                name = 'table_20_name'
-                type = 'textbox'
-                label = 'Query 20 - Name of Table'
-                description = ''
-            }
-            @{
-                name = 'table_20_query'
-                type = 'textbox'
-                label = 'Query 20 - SQL Statement'
-                description = ''
-            }
+			
+			@{
+				name = 'table_2_header'
+				type = 'text'
+				text = 'Table 2'
+				tooltip = 'Table 2 Config'
+				disabled = '!table_1_name'
+				hidden = '!table_1_name'
+			}
+			@{
+				name = 'table_2_name'
+				type = 'textbox'
+				label = 'Table 2 Name'
+				description = ''
+				disabled = '!table_1_name'
+				hidden = '!table_1_name'
+			}
+			@{
+				name = 'table_2_query'
+				type = 'textbox'
+				label = 'Table 2 Query'
+				description = ''
+				disabled = '!table_1_name'
+				hidden = '!table_1_name'
+			}
+
+			@{
+				name = 'table_3_header'
+				type = 'text'
+				text = 'Table 3'
+				tooltip = 'Table 3 Config'
+				disabled = '!table_2_name'
+				hidden = '!table_2_name'
+			}
+			@{
+				name = 'table_3_name'
+				type = 'textbox'
+				label = 'Table 3 Name'
+				description = ''
+				disabled = '!table_2_name'
+				hidden = '!table_2_name'
+			}
+			@{
+				name = 'table_3_query'
+				type = 'textbox'
+				label = 'Table 3 Query'
+				description = ''
+				disabled = '!table_2_name'
+				hidden = '!table_2_name'
+			}
+
+			@{
+				name = 'table_4_header'
+				type = 'text'
+				text = 'Table 4'
+				tooltip = 'Table 4 Config'
+				disabled = '!table_3_name'
+				hidden = '!table_3_name'
+			}
+			@{
+				name = 'table_4_name'
+				type = 'textbox'
+				label = 'Table 4 Name'
+				description = ''
+				disabled = '!table_3_name'
+				hidden = '!table_3_name'
+			}
+			@{
+				name = 'table_4_query'
+				type = 'textbox'
+				label = 'Table 4 Query'
+				description = ''
+				disabled = '!table_3_name'
+				hidden = '!table_3_name'
+			}
+
+			@{
+				name = 'table_5_header'
+				type = 'text'
+				text = 'Table 5'
+				tooltip = 'Table 5 Config'
+				disabled = '!table_4_name'
+				hidden = '!table_4_name'
+			}
+			@{
+				name = 'table_5_name'
+				type = 'textbox'
+				label = 'Table 5 Name'
+				description = ''
+				disabled = '!table_4_name'
+				hidden = '!table_4_name'
+			}
+			@{
+				name = 'table_5_query'
+				type = 'textbox'
+				label = 'Table 5 Query'
+				description = ''
+				disabled = '!table_4_name'
+				hidden = '!table_4_name'
+			}
+
+			@{
+				name = 'table_6_header'
+				type = 'text'
+				text = 'Table 6'
+				tooltip = 'Table 6 Config'
+				disabled = '!table_5_name'
+				hidden = '!table_5_name'
+			}
+			@{
+				name = 'table_6_name'
+				type = 'textbox'
+				label = 'Table 6 Name'
+				description = ''
+				disabled = '!table_5_name'
+				hidden = '!table_5_name'
+			}
+			@{
+				name = 'table_6_query'
+				type = 'textbox'
+				label = 'Table 6 Query'
+				description = ''
+				disabled = '!table_5_name'
+				hidden = '!table_5_name'
+			}
+
+			@{
+				name = 'table_7_header'
+				type = 'text'
+				text = 'Table 7'
+				tooltip = 'Table 7 Config'
+				disabled = '!table_6_name'
+				hidden = '!table_6_name'
+			}
+			@{
+				name = 'table_7_name'
+				type = 'textbox'
+				label = 'Table 7 Name'
+				description = ''
+				disabled = '!table_6_name'
+				hidden = '!table_6_name'
+			}
+			@{
+				name = 'table_7_query'
+				type = 'textbox'
+				label = 'Table 7 Query'
+				description = ''
+				disabled = '!table_6_name'
+				hidden = '!table_6_name'
+			}
+
+			@{
+				name = 'table_8_header'
+				type = 'text'
+				text = 'Table 8'
+				tooltip = 'Table 8 Config'
+				disabled = '!table_7_name'
+				hidden = '!table_7_name'
+			}
+			@{
+				name = 'table_8_name'
+				type = 'textbox'
+				label = 'Table 8 Name'
+				description = ''
+				disabled = '!table_7_name'
+				hidden = '!table_7_name'
+			}
+			@{
+				name = 'table_8_query'
+				type = 'textbox'
+				label = 'Table 8 Query'
+				description = ''
+				disabled = '!table_7_name'
+				hidden = '!table_7_name'
+			}
+
+			@{
+				name = 'table_9_header'
+				type = 'text'
+				text = 'Table 9'
+				tooltip = 'Table 9 Config'
+				disabled = '!table_8_name'
+				hidden = '!table_8_name'
+			}
+			@{
+				name = 'table_9_name'
+				type = 'textbox'
+				label = 'Table 9 Name'
+				description = ''
+				disabled = '!table_8_name'
+				hidden = '!table_8_name'
+			}
+			@{
+				name = 'table_9_query'
+				type = 'textbox'
+				label = 'Table 9 Query'
+				description = ''
+				disabled = '!table_8_name'
+				hidden = '!table_8_name'
+			}
+
+			@{
+				name = 'table_10_header'
+				type = 'text'
+				text = 'Table 10'
+				tooltip = 'Table 10 Config'
+				disabled = '!table_9_name'
+				hidden = '!table_9_name'
+			}
+			@{
+				name = 'table_10_name'
+				type = 'textbox'
+				label = 'Table 10 Name'
+				description = ''
+				disabled = '!table_9_name'
+				hidden = '!table_9_name'
+			}
+			@{
+				name = 'table_10_query'
+				type = 'textbox'
+				label = 'Table 10 Query'
+				description = ''
+				disabled = '!table_9_name'
+				hidden = '!table_9_name'
+			}
+
+			@{
+				name = 'table_11_header'
+				type = 'text'
+				text = 'Table 11'
+				tooltip = 'Table 11 Config'
+				disabled = '!table_10_name'
+				hidden = '!table_10_name'
+			}
+			@{
+				name = 'table_11_name'
+				type = 'textbox'
+				label = 'Table 11 Name'
+				description = ''
+				disabled = '!table_10_name'
+				hidden = '!table_10_name'
+			}
+			@{
+				name = 'table_11_query'
+				type = 'textbox'
+				label = 'Table 11 Query'
+				description = ''
+				disabled = '!table_10_name'
+				hidden = '!table_10_name'
+			}
+
+			@{
+				name = 'table_12_header'
+				type = 'text'
+				text = 'Table 12'
+				tooltip = 'Table 12 Config'
+				disabled = '!table_11_name'
+				hidden = '!table_11_name'
+			}
+			@{
+				name = 'table_12_name'
+				type = 'textbox'
+				label = 'Table 12 Name'
+				description = ''
+				disabled = '!table_11_name'
+				hidden = '!table_11_name'
+			}
+			@{
+				name = 'table_12_query'
+				type = 'textbox'
+				label = 'Table 12 Query'
+				description = ''
+				disabled = '!table_11_name'
+				hidden = '!table_11_name'
+			}
+
+			@{
+				name = 'table_13_header'
+				type = 'text'
+				text = 'Table 13'
+				tooltip = 'Table 13 Config'
+				disabled = '!table_12_name'
+				hidden = '!table_12_name'
+			}
+			@{
+				name = 'table_13_name'
+				type = 'textbox'
+				label = 'Table 13 Name'
+				description = ''
+				disabled = '!table_12_name'
+				hidden = '!table_12_name'
+			}
+			@{
+				name = 'table_13_query'
+				type = 'textbox'
+				label = 'Table 13 Query'
+				description = ''
+				disabled = '!table_12_name'
+				hidden = '!table_12_name'
+			}
+
+			@{
+				name = 'table_14_header'
+				type = 'text'
+				text = 'Table 14'
+				tooltip = 'Table 14 Config'
+				disabled = '!table_13_name'
+				hidden = '!table_13_name'
+			}
+			@{
+				name = 'table_14_name'
+				type = 'textbox'
+				label = 'Table 14 Name'
+				description = ''
+				disabled = '!table_13_name'
+				hidden = '!table_13_name'
+			}
+			@{
+				name = 'table_14_query'
+				type = 'textbox'
+				label = 'Table 14 Query'
+				description = ''
+				disabled = '!table_13_name'
+				hidden = '!table_13_name'
+			}
+
+			@{
+				name = 'table_15_header'
+				type = 'text'
+				text = 'Table 15'
+				tooltip = 'Table 15 Config'
+				disabled = '!table_14_name'
+				hidden = '!table_14_name'
+			}
+			@{
+				name = 'table_15_name'
+				type = 'textbox'
+				label = 'Table 15 Name'
+				description = ''
+				disabled = '!table_14_name'
+				hidden = '!table_14_name'
+			}
+			@{
+				name = 'table_15_query'
+				type = 'textbox'
+				label = 'Table 15 Query'
+				description = ''
+				disabled = '!table_14_name'
+				hidden = '!table_14_name'
+			}
+
+			@{
+				name = 'table_16_header'
+				type = 'text'
+				text = 'Table 16'
+				tooltip = 'Table 16 Config'
+				disabled = '!table_15_name'
+				hidden = '!table_15_name'
+			}
+			@{
+				name = 'table_16_name'
+				type = 'textbox'
+				label = 'Table 16 Name'
+				description = ''
+				disabled = '!table_15_name'
+				hidden = '!table_15_name'
+			}
+			@{
+				name = 'table_16_query'
+				type = 'textbox'
+				label = 'Table 16 Query'
+				description = ''
+				disabled = '!table_15_name'
+				hidden = '!table_15_name'
+			}
+
+			@{
+				name = 'table_17_header'
+				type = 'text'
+				text = 'Table 17'
+				tooltip = 'Table 17 Config'
+				disabled = '!table_16_name'
+				hidden = '!table_16_name'
+			}
+			@{
+				name = 'table_17_name'
+				type = 'textbox'
+				label = 'Table 17 Name'
+				description = ''
+				disabled = '!table_16_name'
+				hidden = '!table_16_name'
+				
+			}
+			@{
+				name = 'table_17_query'
+				type = 'textbox'
+				label = 'Table 17 Query'
+				description = ''
+				disabled = '!table_16_name'
+				hidden = '!table_16_name'
+			}
+
+			@{
+				name = 'table_18_header'
+				type = 'text'
+				text = 'Table 18'
+				tooltip = 'Table 18 Config'
+				disabled = '!table_17_name'
+				hidden = '!table_17_name'
+			}
+			@{
+				name = 'table_18_name'
+				type = 'textbox'
+				label = 'Table 18 Name'
+				description = ''
+				disabled = '!table_17_name'
+				hidden = '!table_17_name'
+			}
+			@{
+				name = 'table_18_query'
+				type = 'textbox'
+				label = 'Table 18 Query'
+				description = ''
+				disabled = '!table_17_name'
+				hidden = '!table_17_name'
+			}
+
+			@{
+				name = 'table_19_header'
+				type = 'text'
+				text = 'Table 19'
+				tooltip = 'Table 19 Config'
+				disabled = '!table_18_name'
+				hidden = '!table_18_name'
+			}
+			@{
+				name = 'table_19_name'
+				type = 'textbox'
+				label = 'Table 19 Name'
+				description = ''
+				disabled = '!table_18_name'
+				hidden = '!table_18_name'
+			}
+			@{
+				name = 'table_19_query'
+				type = 'textbox'
+				label = 'Table 19 Query'
+				description = ''
+				disabled = '!table_18_name'
+				hidden = '!table_18_name'
+			}
+
+			@{
+				name = 'table_20_header'
+				type = 'text'
+				text = 'Table 20'
+				tooltip = 'Table 20 Config'
+				disabled = '!table_19_name'
+				hidden = '!table_19_name'
+			}
+			@{
+				name = 'table_20_name'
+				type = 'textbox'
+				label = 'Table 20 Name'
+				description = ''
+				disabled = '!table_19_name'
+				hidden = '!table_19_name'
+			}
+			@{
+				name = 'table_20_query'
+				type = 'textbox'
+				label = 'Table 20 Query'
+				description = ''
+				disabled = '!table_19_name'
+				hidden = '!table_19_name'
+			}
+
+			
         )
     }
 
     if ($TestConnection) {
         Open-ProgressDBConnection $ConnectionParams
-
+		$connection_params = ConvertFrom-Json2 $ConnectionParams
         
         $query = "SELECT TBL 'Name', 'Table' `"Type`"  FROM sysprogress.SYSTABLES_FULL WHERE TBLTYPE = 'T' ORDER BY TBL"
-        $sql_command = New-ProgressDBCommand $Query
+        $sql_command = New-ProgressDBCommand $Query $ConnectionParams
+		$sql_command.CommandTimeout = $connection_params.query_timeout
         $result = (Invoke-ProgressDBCommand $sql_command)
     }
 
@@ -392,13 +691,10 @@ function Idm-OnUnload {
     Close-ProgressDBConnection
 }
 
-
 #
 # CRUD functions
 #
-
 $ColumnsInfoCache = @{}
-
 
 function Idm-Dispatcher {
     param (
@@ -418,12 +714,6 @@ function Idm-Dispatcher {
     if ($Class -eq '') {
 
         if ($GetMeta) {
-            #
-            # Get all tables and views in database
-            #
-
-            Open-ProgressDBConnection $SystemParams
-
             #
             # Output list of supported operations per table/view (named Class)
             #
@@ -453,14 +743,7 @@ function Idm-Dispatcher {
     else {
 
         if ($GetMeta) {
-            #
-            # Get meta data
-            #
-
-            Open-ProgressDBConnection $SystemParams
-
-            @()
-
+           @() # No Configuration Options
         }
         else {
             #
@@ -478,7 +761,7 @@ function Idm-Dispatcher {
                 }
             }
 			
-            $column_query = "SELECT TOP 1 * FROM ( $class_query ) columns"
+            $column_query = "SELECT TOP 1 * FROM ( $($class_query) ) columns"
 
             $columns = Fill-SqlInfoCache -Query $column_query
 
@@ -497,10 +780,12 @@ function Idm-Dispatcher {
             foreach ($key in $function_params.Keys) { if ($function_params[$key] -eq $null) { $keys_with_null_value += $key } }
             foreach ($key in $keys_with_null_value) { $function_params[$key] = [System.DBNull]::Value }
             
-            $sql_command = New-ProgressDBCommand $class_query
+            $sql_command = New-ProgressDBCommand $class_query $SystemParams
+			
             Invoke-ProgressDBCommand $sql_command
             Dispose-ProgressDBCommand $sql_command
-
+			
+			Close-ProgressDBConnection
         }
 
     }
@@ -508,11 +793,9 @@ function Idm-Dispatcher {
     Log info "Done"
 }
 
-
 #
 # Helper functions
 #
-
 function Fill-SqlInfoCache {
     param (
         [switch] $Force,
@@ -525,9 +808,10 @@ function Fill-SqlInfoCache {
     $result = (Invoke-ProgressDBCommand $sql_command) | Get-Member -MemberType Properties | Select-Object Name
     
     Dispose-ProgressDBCommand $sql_command
-
+	
     $objects = New-Object System.Collections.ArrayList
     $object = @{}
+	
     # Process in one pass
     foreach ($row in $result) {
             $object = @{
@@ -553,11 +837,13 @@ function Fill-SqlInfoCache {
 
 function New-ProgressDBCommand {
     param (
-        [string] $CommandText
+        [string] $CommandText,
+		[string] $ConnectionParams
     )
-
-    $sql_command = New-Object System.Data.Odbc.OdbcCommand($CommandText, $Global:ProgressDBConnection)
-	$sql_command.CommandTimeout = 1800
+	$connection_params = ConvertFrom-Json2 $ConnectionParams
+    
+	$sql_command = New-Object System.Data.Odbc.OdbcCommand($CommandText, $Global:ProgressDBConnection)
+	$sql_command.CommandTimeout = $connection_params.query_timeout
     return $sql_command
 }
 
@@ -638,7 +924,6 @@ function Open-ProgressDBConnection {
     if($connection_params.enableETWT) { $connectionString += "ETWT=1;" }
     if($connection_params.enableUWCT) { $connectionString += "UWCT=1;" }
     if($connection_params.enableKA) { $connectionString += "KA=1;" }
-    LOG info $connection_string
     
     if ($Global:ProgressDBConnection -and $connection_string -ne $Global:ProgressDBConnectionString) {
         Log info "ProgressDBConnection connection parameters changed"
@@ -650,12 +935,12 @@ function Open-ProgressDBConnection {
         Close-ProgressDBConnection
     }
 
-    Log info "Opening ProgressDBConnection '$connection_string'"
+    Log info "Opening ProgressDBConnection"
 
     try {
         $connection = (new-object System.Data.Odbc.OdbcConnection);
         $connection.connectionstring = $connection_string
-        $connection.ConnectionTimeout = 3600
+        $connection.ConnectionTimeout = $connection_params.connection_timeout
 		$connection.open();
 
         $Global:ProgressDBConnection       = $connection
@@ -664,14 +949,13 @@ function Open-ProgressDBConnection {
         $Global:ColumnsInfoCache = @{}
     }
     catch {
-        Log warn "Failed: $_"
-        #Write-Error $_
+        Log error "Failed: $_"
+		Write-Error $_
     }
 
     Log info "Done"
     
 }
-
 
 function Close-ProgressDBConnection {
     if ($Global:ProgressDBConnection) {
