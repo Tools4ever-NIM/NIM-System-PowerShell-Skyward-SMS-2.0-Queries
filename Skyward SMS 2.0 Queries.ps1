@@ -1,3 +1,4 @@
+# version: 1.3
 $Log_MaskableKeys = @(
     'password',
     'connection_string'
@@ -84,6 +85,12 @@ function Idm-SystemInfo {
                 type = 'checkbox'
                 label = 'Enable KA'
                 value = $true
+            }
+			@{
+                name = 'enablePacketSize'
+                type = 'checkbox'
+                label = 'Enable Packet Size'
+                value = $false
             }
 			@{
                 name = 'user'
@@ -919,8 +926,9 @@ function Open-ProgressDBConnection {
 
     $connection_params = ConvertFrom-Json2 $ConnectionParams
 
-    $connection_string =  "DRIVER={Progress OpenEdge $($connection_params.driver_version) driver};HOST=$($connection_params.host_name);PORT=$($connection_params.port);DB=$($connection_params.database);UID=$($connection_params.user);PWD=$($connection_params.password);DIL=$($connection_params.isolation_mode);AS=$($connection_params.array_size);Packet Size=512"
+    $connection_string =  "DRIVER={Progress OpenEdge $($connection_params.driver_version) driver};HOST=$($connection_params.host_name);PORT=$($connection_params.port);DB=$($connection_params.database);UID=$($connection_params.user);PWD=$($connection_params.password);DIL=$($connection_params.isolation_mode);AS=$($connection_params.array_size);"
     
+	if($connection_params.enablePacketSize) { $connectionString += "Packet Size=512;" }
     if($connection_params.enableETWT) { $connectionString += "ETWT=1;" }
     if($connection_params.enableUWCT) { $connectionString += "UWCT=1;" }
     if($connection_params.enableKA) { $connectionString += "KA=1;" }
