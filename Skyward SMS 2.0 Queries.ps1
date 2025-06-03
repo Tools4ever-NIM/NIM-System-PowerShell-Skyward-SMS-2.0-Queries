@@ -33,7 +33,7 @@ function Idm-SystemInfo {
         [string] $ConnectionParams
     )
 
-    Log info "-Connection=$Connection -TestConnection=$TestConnection -Configuration=$Configuration -ConnectionParams='$ConnectionParams'"
+    Log verbose "-Connection=$Connection -TestConnection=$TestConnection -Configuration=$Configuration -ConnectionParams='$ConnectionParams'"
     
     if ($Connection) {
         @(
@@ -712,7 +712,7 @@ function Idm-SystemInfo {
         @()
     }
 
-    Log info "Done"
+    Log verbose "Done"
 }
 
 
@@ -737,7 +737,7 @@ function Idm-Dispatcher {
         [string] $FunctionParams
     )
 
-    Log info "-Class='$Class' -Operation='$Operation' -GetMeta=$GetMeta -SystemParams='$SystemParams' -FunctionParams='$FunctionParams'"
+    Log verbose "-Class='$Class' -Operation='$Operation' -GetMeta=$GetMeta -SystemParams='$SystemParams' -FunctionParams='$FunctionParams'"
     $connection_params = ConvertFrom-Json2 $SystemParams
 
     if ($Class -eq '') {
@@ -819,7 +819,7 @@ function Idm-Dispatcher {
 
     }
 
-    Log info "Done"
+    Log verbose "Done"
 }
 
 #
@@ -956,7 +956,7 @@ function Open-ProgressDBConnection {
     if($connection_params.enableKA) { $connectionString += "KA=1;" }
     
     if ($Global:ProgressDBConnection -and $connection_string -ne $Global:ProgressDBConnectionString) {
-        Log info "ProgressDBConnection connection parameters changed"
+        Log verbose "ProgressDBConnection connection parameters changed"
         Close-ProgressDBConnection
     }
 
@@ -965,7 +965,7 @@ function Open-ProgressDBConnection {
         Close-ProgressDBConnection
     }
 
-    Log info "Opening ProgressDBConnection"
+    Log verbose "Opening ProgressDBConnection"
 
     try {
         $connection = (new-object System.Data.Odbc.OdbcConnection);
@@ -983,13 +983,13 @@ function Open-ProgressDBConnection {
 		Write-Error $_
     }
 
-    Log info "Done"
+    Log verbose "Done"
     
 }
 
 function Close-ProgressDBConnection {
     if ($Global:ProgressDBConnection) {
-        Log info "Closing ProgressDBConnection"
+        Log verbose "Closing ProgressDBConnection"
 
         try {
             $Global:ProgressDBConnection.Close()
@@ -999,6 +999,6 @@ function Close-ProgressDBConnection {
             # Purposely ignoring errors
         }
 
-        Log info "Done"
+        Log verbose "Done"
     }
 }
