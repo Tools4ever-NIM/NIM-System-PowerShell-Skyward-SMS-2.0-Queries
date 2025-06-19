@@ -790,25 +790,6 @@ function Idm-Dispatcher {
                 }
             }
 			
-            $column_query = "SELECT TOP 1 * FROM ( $($class_query) ) columns"
-
-            $columns = Fill-SqlInfoCache -Query $column_query
-
-            $Global:ColumnsInfoCache[$Class] = @{
-                primary_keys = @($columns | Where-Object { $_.is_primary_key } | ForEach-Object { $_.name })
-                identity_col = @($columns | Where-Object { $_.is_identity    } | ForEach-Object { $_.name })[0]
-            }
-
-            $primary_keys = $Global:ColumnsInfoCache[$Class].primary_keys
-            $identity_col = $Global:ColumnsInfoCache[$Class].identity_col
-
-            $function_params = ConvertFrom-Json2 $FunctionParams
-
-            # Replace $null by [System.DBNull]::Value
-            $keys_with_null_value = @()
-            foreach ($key in $function_params.Keys) { if ($function_params[$key] -eq $null) { $keys_with_null_value += $key } }
-            foreach ($key in $keys_with_null_value) { $function_params[$key] = [System.DBNull]::Value }
-            
             $sql_command = New-ProgressDBCommand $class_query $SystemParams
 			
             Invoke-ProgressDBCommand $sql_command
@@ -894,7 +875,8 @@ function Invoke-ProgressDBCommand {
         param (
             [System.Data.Odbc.OdbcCommand] $SqlCommand
         )
-        $data_reader = $SqlCommand.ExecuteReader()
+        Log verbose "Executing Query: $($SqlCommand.CommandText)"
+		$data_reader = $SqlCommand.ExecuteReader()
         $column_names = @($data_reader.GetSchemaTable().ColumnName)
 
         if ($column_names) {
@@ -933,8 +915,8 @@ function Invoke-ProgressDBCommand {
         Invoke-ProgressDBCommand-ExecuteReader $SqlCommand
     }
     catch {
-        Log error "Failed: $_"
-        Write-Error $_
+        Log error "Query Failure: $_"
+        throw $_
     }
 
     Log debug "Done"
@@ -979,8 +961,8 @@ function Open-ProgressDBConnection {
         $Global:ColumnsInfoCache = @{}
     }
     catch {
-        Log error "Failed: $_"
-		Write-Error $_
+        Log error "Connection Failure: $($_)"
+        throw $_
     }
 
     Log verbose "Done"
