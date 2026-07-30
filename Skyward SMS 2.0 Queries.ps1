@@ -932,10 +932,10 @@ function Open-ProgressDBConnection {
 
     $connection_string =  "DRIVER={Progress OpenEdge $($connection_params.driver_version) driver};HOST=$($connection_params.host_name);PORT=$($connection_params.port);DB=$($connection_params.database);UID=$($connection_params.user);PWD=$($connection_params.password);DIL=$($connection_params.isolation_mode);AS=$($connection_params.array_size);"
     
-	if($connection_params.enablePacketSize) { $connectionString += "Packet Size=512;" }
-    if($connection_params.enableETWT) { $connectionString += "ETWT=1;" }
-    if($connection_params.enableUWCT) { $connectionString += "UWCT=1;" }
-    if($connection_params.enableKA) { $connectionString += "KA=1;" }
+	if($connection_params.enablePacketSize) { $connection_string += "Packet Size=512;" }
+    if($connection_params.enableETWT) { $connection_string += "ETWT=1;" }
+    if($connection_params.enableUWCT) { $connection_string += "UWCT=1;" }
+    if($connection_params.enableKA) { $connection_string += "KA=1;" }
     
     if ($Global:ProgressDBConnection -and $connection_string -ne $Global:ProgressDBConnectionString) {
         Log verbose "ProgressDBConnection connection parameters changed"
